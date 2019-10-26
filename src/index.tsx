@@ -3,26 +3,26 @@ import { render } from "react-dom"
 import styled from "styled-components"
 
 const NUM = 10
+const SIZE = 40
 const Grid = styled.div`
   display: grid;
-  grid-template-rows: repeat(${NUM}, 1vh);
-  grid-template-columns: repeat(${NUM}, 1vh);
+  grid-template-rows: repeat(${NUM}, ${SIZE}px);
+  grid-template-columns: repeat(${NUM}, ${SIZE}px);
   grid-gap: 1em;
 `
 const ItemBg = styled.div`
-  background: red;
-  height: 20px;
-  width: 20px;
+  background: rgba(255,0,0,0.6);
+  height: ${SIZE}px;
+  width: ${SIZE}px;
   :hover{
     background: blue;
   }
 `
 const ItemPeace = styled.div`
   background: green;
-  height: 10px;
-  width: 20px;
-  transform: rotateX(90deg);
-  transform-origin: top;
+  height: ${SIZE/2}px;
+  width: ${SIZE}px;
+  transform: rotateX(90deg) translateZ(${-SIZE/4}px)  translateY(${SIZE/4}px);
 
 `
 
