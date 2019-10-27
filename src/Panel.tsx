@@ -1,12 +1,12 @@
 import styled from "@emotion/styled"
-import { SIZE } from "./const"
+import { VAR_SIZE } from "./Variables"
 export type PanelProps = {
   color: string
 }
 export const Panel = styled.div<PanelProps>`
   position: absolute;
-  height: ${SIZE};
-  width: ${SIZE};
+  height: ${VAR_SIZE};
+  width: ${VAR_SIZE};
   background: ${({ color }) => color || "white"};
   border: 1px solid black;
 `

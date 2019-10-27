@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { ThemeProvider } from "emotion-theming"
 export const Theme = ({ children }) => {
   const [theme, setTheme] = useState({
-    showMover: true
+    showMover: false
   })
   const changeMover = (e) => {
     const v = e.target.checked

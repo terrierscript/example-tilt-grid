@@ -22,8 +22,9 @@ type Position = {
   y: number
 }
 
-export const MoverPos = styled.div<Position>`
+export const PositionCalcurator = styled.div<Position>`
   z-index: -1;
+  /* display:none; */
   grid-row: span ${({ y }) => y};
   grid-column: span ${({ x }) => x};
   transition: 0.5s;
@@ -44,12 +45,12 @@ const clamp = (x, lower, upper) => {
 const rand = () => Math.floor(Math.random() * NUM)
 const useMover = () => {
   const [pos, setPos] = useState({
-    x: 3, // rand(),
-    y: 4 //rand()
+    x: rand(),
+    y: rand()
   })
   const { x, y } = pos
   const move = (dx, dy) => {
-    setPos(({ x, y }) => {
+    setPos(() => {
       return {
         x: clamp(dx, 0, NUM),
         y: clamp(dy, 0, NUM)
@@ -72,32 +73,39 @@ const Move = styled.div<Position>`
   transform-style: preserve-3d;
 `
 
+const CalcuratorGrid = styled(Grid)`
+  z-index: -1;
+`
+
 export const Peace = (props: PanelProps) => {
   const [x, y] = useMover()
+  const [ready, setReady] = useState(false)
   const [offsetX, setOffsetX] = useState(0)
   const [offsetY, setOffsetY] = useState(0)
-  const ref = useRef()
-  const gridRef = useRef()
+  const ref = useRef<HTMLElement>(null)
+  const gridRef = useRef<HTMLElement>(null)
   useEffect(() => {
+    console.log(ref, gridRef)
     if (!ref.current || !gridRef.current) {
       return
     }
-    console.log(gridRef)
-    setOffsetX(ref.current.clientWidth)
-    setOffsetY(ref.current.clientHeight)
+    const { clientWidth, clientHeight } = ref.current
+    console.log(clientWidth, clientHeight)
+    setOffsetX(clientWidth)
+    setOffsetY(clientHeight)
+    setReady(true)
   }, [x, y])
 
   return (
     <>
-      <Grid key="peace" ref={gridRef}>
-        <MoverPos x={x} y={y} ref={ref} />
-        {/* <PeacePos> */}
-        {/* <Panel />
-      </PeacePos> */}
-      </Grid>
-      <Move x={offsetX} y={offsetY}>
-        <ItemCube {...props} />
-      </Move>
+      <CalcuratorGrid ref={gridRef}>
+        <PositionCalcurator x={x} y={y} ref={ref} />
+      </CalcuratorGrid>
+      {ready && (
+        <Move x={offsetX} y={offsetY}>
+          <ItemCube {...props} />
+        </Move>
+      )}
     </>
   )
 }

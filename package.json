@@ -28,7 +28,7 @@
     "react-dom": "^16.10.1",
     "react-test-renderer": "^16.10.1",
     "recompose": "^0.30.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.1-rc"
   },
   "scripts": {
     "start": "parcel src/index.html",
