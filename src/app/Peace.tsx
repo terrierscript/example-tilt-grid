@@ -1,21 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"
 import { ItemCube } from "./ItemCube"
 import { NUM } from "./Variables"
-import { PanelProps, Panel } from "./Panel"
+import { PanelProps } from "./Panel"
 import styled from "@emotion/styled"
 import { Grid } from "./Map"
-import { Variables } from "./Variables"
-
-// const Anim = styled.div``
-// export const PeaceGrid = styled.div`
-//   background: transparent;
-//   position: absolute;
-//   display: grid;
-//   transition: 0.5s;
-//   grid-template-rows: repeat(2, max-content);
-//   grid-template-columns: repeat(2, max-content);
-//   /* grid-gap: 20px; */
-// `
 
 type Position = {
   x: number
@@ -32,11 +20,6 @@ export const PositionCalcurator = styled.div<Position>`
   background: ${(props) => (props.theme.showMover ? "rgba(0, 0, 0, 0.1)" : "")};
   /* width: ${({ x }) => x}fr;
   height: ${({ y }) => y}fr; */
-`
-
-const PeacePos = styled.div<Position>`
-  grid-row: 2;
-  grid-column: 2;
 `
 
 const clamp = (x, lower, upper) => {

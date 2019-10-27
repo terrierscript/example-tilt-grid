@@ -7,5 +7,5 @@ export const Variables = styled.div`
   --num: ${NUM};
 `
 
-export const VAR_NUM = "var(--num)" //40
-export const VAR_SIZE = "var(--size)" //40
+export const VAR_NUM = "var(--num)"
+export const VAR_SIZE = "var(--size)"
