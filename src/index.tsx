@@ -19,22 +19,33 @@ type Position = {
 }
 const Grid = styled.div`
   position: absolute;
-  background: rgba(0, 100, 100, 0.5);
   display: grid;
+  background: rgba(0, 100, 100, 0.5);
   grid-template-rows: repeat(${NUM}, ${SIZE}px);
   grid-template-columns: repeat(${NUM}, ${SIZE}px);
-  transition: 0.5s;
+  /* grid-gap: 20px; */
 `
 
-const Anim = styled.div``
-const PeaceGrid = sstyled<Position>(Grid)`
+// const Anim = styled.div``
+const PeaceGrid = styled.div`
   background: transparent;
-  grid-template-rows: ${(props) => `repeat(2, ${SIZE * props.x}px)`};
-  grid-template-columns: ${(props) => `repeat(2, ${SIZE * props.y}px)`};
+  position: absolute;
+  display: grid;
+  transition: 0.5s;
+  grid-template-rows: repeat(2, max-content);
+  grid-template-columns: repeat(2, max-content);
+  /* grid-gap: 20px; */
 `
+
+// const PeaceGrid = sstyled<Position>(Grid)`
+//   background: transparent;
+//   grid-template-rows: ${(props) => `repeat(2, ${SIZE * props.x}px)`};
+//   grid-template-columns: ${(props) => `repeat(2, ${SIZE * props.y}px)`};
+// `
 
 const ItemBg = styled.div`
   background: rgba(255, 0, 0, 0.6);
+  border: dotted 1px blue;
   height: ${SIZE}px;
   width: ${SIZE}px;
   :hover {
@@ -60,6 +71,15 @@ const Trans = styled.div`
 const PeacePos = styled(Trans)`
   grid-row: 2;
   grid-column: 2;
+`
+const MovePos = styled.div<Position>`
+  grid-row: 1;
+  grid-column: 1;
+  transition: 0.5s;
+
+  background: gray;
+  width: ${({ x }) => x * SIZE}px;
+  height: ${({ y }) => y * SIZE}px;
 `
 /*
    grid-row: ${(props) => props.x};
@@ -95,12 +115,8 @@ const ItemPeace = (props) => {
   )
 }
 
-const Item = () => {
-  return (
-    <>
-      <ItemBg></ItemBg>
-    </>
-  )
+const Tile = () => {
+  return <ItemBg></ItemBg>
 }
 
 const TilteCamera = styled.div`
@@ -128,8 +144,8 @@ const useKeys = () => {
   const [x, setX] = useState(3)
   const [y, setY] = useState(3)
   const move = (dx, dy) => {
-    setX((v) => clamp(v + dx, 0, NUM))
-    setY((v) => clamp(v + dy, 0, NUM))
+    setX((v) => clamp(v + dx, 0, NUM - 1))
+    setY((v) => clamp(v + dy, 0, NUM - 1))
   }
   useEffect(() => {
     setInterval(() => {
@@ -149,10 +165,11 @@ const App = () => {
           {Array(NUM * NUM)
             .fill(null)
             .map((_, i) => (
-              <Item key={i} />
+              <Tile key={i} />
             ))}
         </Grid>
-        <PeaceGrid key="peace" x={x} y={y}>
+        <PeaceGrid key="peace">
+          <MovePos x={x} y={y} />
           <ItemPeace x={x} y={y} />
         </PeaceGrid>
       </Camera>
