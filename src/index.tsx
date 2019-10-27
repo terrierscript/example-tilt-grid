@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react"
 import { render } from "react-dom"
 // import styled, { StyleSheetManager } from "styled-components"
 import styled from "@emotion/styled"
@@ -23,7 +23,7 @@ const Grid = styled.div`
   background: rgba(0, 100, 100, 0.5);
   grid-template-rows: repeat(${NUM}, ${SIZE}px);
   grid-template-columns: repeat(${NUM}, ${SIZE}px);
-  /* grid-gap: 20px; */
+  /* grid-gap: 10px; */
 `
 
 // const Anim = styled.div``
@@ -115,18 +115,13 @@ const ItemPeace = (props) => {
   )
 }
 
-const Tile = () => {
-  return <ItemBg></ItemBg>
-}
-
 const TilteCamera = styled.div`
   width: max-content;
   transform: rotateX(60deg) rotateZ(45deg) translateX(calc(100%));
   transform-style: preserve-3d;
 `
 const Center = styled.div`
-  transform: translateX(calc(50% / 1.41)) translateY(20vh);
-  /* transform-style: preserve-3d; */
+  transform: translateX(50vw) translateY(25vh);
 `
 
 const Camera = ({ children }) => {
@@ -144,8 +139,12 @@ const useKeys = () => {
   const [x, setX] = useState(3)
   const [y, setY] = useState(3)
   const move = (dx, dy) => {
-    setX((v) => clamp(v + dx, 0, NUM - 1))
-    setY((v) => clamp(v + dy, 0, NUM - 1))
+    if (dx !== 0) {
+      setX((v) => clamp(v + dx, 0, NUM - 1))
+    }
+    if (dy !== 0) {
+      setY((v) => clamp(v + dy, 0, NUM - 1))
+    }
   }
   useEffect(() => {
     setInterval(() => {
@@ -153,7 +152,28 @@ const useKeys = () => {
       Math.random() > 0.5 ? move(d, 0) : move(0, d)
     }, 1000)
   }, [])
+
   return [x, y]
+}
+
+const MapTile = () => {
+  const ref = useRef()
+  useLayoutEffect(() => {
+    console.log(ref)
+  }, [])
+  return <ItemBg ref={ref} />
+}
+
+const Map = () => {
+  return (
+    <Grid>
+      {Array(NUM * NUM)
+        .fill(null)
+        .map((_, i) => (
+          <MapTile key={i} />
+        ))}
+    </Grid>
+  )
 }
 const App = () => {
   const [x, y] = useKeys()
@@ -161,13 +181,7 @@ const App = () => {
     // {/* <StyleSheetManager stylisOptions={{ prefix: false }}> */}
     <CacheProvider value={myCache}>
       <Camera>
-        <Grid>
-          {Array(NUM * NUM)
-            .fill(null)
-            .map((_, i) => (
-              <Tile key={i} />
-            ))}
-        </Grid>
+        <Map />
         <PeaceGrid key="peace">
           <MovePos x={x} y={y} />
           <ItemPeace x={x} y={y} />
