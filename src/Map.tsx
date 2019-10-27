@@ -8,7 +8,7 @@ export const Grid = styled.div`
   grid-template-rows: repeat(${NUM}, ${SIZE}px);
   grid-template-columns: repeat(${NUM}, ${SIZE}px);
   /* background: rgba(0, 100, 100, 0.5); */
-  /* grid-gap: 10px; */
+  grid-gap: 1em;
 `
 
 export const ItemBg = styled.div`

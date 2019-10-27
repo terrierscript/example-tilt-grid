@@ -21,9 +21,6 @@ const App = () => {
       <Theme>
         <Camera>
           <Map />
-          <Peace color="rgba(255,0,0,0.5)" />
-          <Peace color="rgba(0,255,0,0.5)" />
-          <Peace color="rgba(0,0,255,0.5)" />
         </Camera>
       </Theme>
     </CacheProvider>
