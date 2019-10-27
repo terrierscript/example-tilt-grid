@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react"
 import { render } from "react-dom"
 // import styled, { StyleSheetManager } from "styled-components"
 import styled from "@emotion/styled"
-import { CacheProvider } from "@emotion/core"
+import { default as sstyled } from "styled-components"
+import { CacheProvider, css } from "@emotion/core"
 import createCache from "@emotion/cache"
 
 export const myCache = createCache({
@@ -12,14 +13,24 @@ export const myCache = createCache({
 const NUM = 10
 const SIZE = 40
 
+type Position = {
+  x: number
+  y: number
+}
 const Grid = styled.div`
   position: absolute;
   background: rgba(0, 100, 100, 0.5);
   display: grid;
   grid-template-rows: repeat(${NUM}, ${SIZE}px);
   grid-template-columns: repeat(${NUM}, ${SIZE}px);
-  grid-gap: 1em;
-  translate: 0.5s;
+  transition: 0.5s;
+`
+
+const Anim = styled.div``
+const PeaceGrid = sstyled<Position>(Grid)`
+  background: transparent;
+  grid-template-rows: ${(props) => `repeat(2, ${SIZE * props.x}px)`};
+  grid-template-columns: ${(props) => `repeat(2, ${SIZE * props.y}px)`};
 `
 
 const ItemBg = styled.div`
@@ -40,10 +51,19 @@ const Flat = styled.div`
   background: ${PEACE_COLOR};
   border: 1px solid black;
 `
-const PeacePos = styled.div<{ x: number; y: number }>`
-  grid-row: ${(props) => props.x};
-  grid-column: ${(props) => props.y};
+
+const Trans = styled.div`
+  transition: 0.5s;
 `
+
+// .attrs(({ x, y }) => ({ x, y }))
+const PeacePos = styled(Trans)`
+  grid-row: 2;
+  grid-column: 2;
+`
+/*
+   grid-row: ${(props) => props.x};
+  grid-column: ${(props) => props.y}; */
 const Front = styled(Flat)`
   transform: rotateX(90deg) translateZ(${-SIZE / 2}px) translateY(${SIZE / 2}px);
 `
@@ -89,7 +109,7 @@ const TilteCamera = styled.div`
   transform-style: preserve-3d;
 `
 const Center = styled.div`
-  transform: translateX(calc(50% / 1.41));
+  transform: translateX(calc(50% / 1.41)) translateY(20vh);
   /* transform-style: preserve-3d; */
 `
 
@@ -107,15 +127,16 @@ const clamp = (x, lower, upper) => {
 const useKeys = () => {
   const [x, setX] = useState(3)
   const [y, setY] = useState(3)
+  const move = (dx, dy) => {
+    setX((v) => clamp(v + dx, 0, NUM))
+    setY((v) => clamp(v + dy, 0, NUM))
+  }
   useEffect(() => {
     setInterval(() => {
-      const d = 0.5 - Math.random() > 0 ? 1 : -1
-      Math.random() > 0.5
-        ? setX((v) => clamp(v + d, 0, NUM))
-        : setY((v) => clamp(v + d, 0, NUM))
+      const d = Math.random() > 0.5 ? 1 : -1
+      Math.random() > 0.5 ? move(d, 0) : move(0, d)
     }, 1000)
   }, [])
-  console.log()
   return [x, y]
 }
 const App = () => {
@@ -131,9 +152,9 @@ const App = () => {
               <Item key={i} />
             ))}
         </Grid>
-        <Grid>
+        <PeaceGrid key="peace" x={x} y={y}>
           <ItemPeace x={x} y={y} />
-        </Grid>
+        </PeaceGrid>
       </Camera>
     </CacheProvider>
     // {/* </StyleSheetManager> */}
