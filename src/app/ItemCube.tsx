@@ -25,6 +25,7 @@ const Bottom = styled(Panel)``
 const Top = styled(Panel)`
   transform: translateZ(${VAR_SIZE});
 `
+
 export const ItemCube = (props: PanelProps) => {
   return (
     <>

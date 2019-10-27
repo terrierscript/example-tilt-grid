@@ -14,7 +14,7 @@ export const Grid = styled.div`
 
 export const ItemBg = styled.div`
   /* background: rgba(255, 0, 0, 0.6); */
-  border: dotted 1px blue;
+  border: dotted 1px gray;
   height: ${VAR_SIZE};
   width: ${VAR_SIZE};
   :hover {

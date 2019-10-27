@@ -8,5 +8,5 @@ export const Panel = styled.div<PanelProps>`
   height: ${VAR_SIZE};
   width: ${VAR_SIZE};
   background: ${({ color }) => color || "white"};
-  border: 1px solid black;
+  border: var(--panel-border, 1px solid rgba(0, 0, 0, 0.2));
 `
