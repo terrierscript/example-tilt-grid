@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { ItemCube } from "./ItemCube"
-import { NUM, SIZE } from "./const"
+import { NUM } from "./Variables"
 import { PanelProps, Panel } from "./Panel"
 import styled from "@emotion/styled"
 import { Grid } from "./Map"

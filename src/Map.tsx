@@ -1,12 +1,12 @@
 import React, { useRef } from "react"
-import { NUM, SIZE } from "./const"
+import { NUM, VAR_NUM, VAR_SIZE } from "./Variables"
 import styled from "@emotion/styled"
 
 export const Grid = styled.div`
   position: absolute;
   display: grid;
-  grid-template-rows: repeat(${NUM}, ${SIZE});
-  grid-template-columns: repeat(${NUM}, ${SIZE});
+  grid-template-rows: repeat(${VAR_NUM}, ${VAR_SIZE});
+  grid-template-columns: repeat(${VAR_NUM}, ${VAR_SIZE});
   /* background: rgba(0, 100, 100, 0.5); */
   grid-gap: var(--gap, 10px);
   transition: 0.5s;
@@ -15,8 +15,8 @@ export const Grid = styled.div`
 export const ItemBg = styled.div`
   /* background: rgba(255, 0, 0, 0.6); */
   border: dotted 1px blue;
-  height: ${SIZE};
-  width: ${SIZE};
+  height: ${VAR_SIZE};
+  width: ${VAR_SIZE};
   :hover {
     background: blue;
   }
