@@ -5,8 +5,8 @@ export type PanelProps = {
 }
 export const Panel = styled.div<PanelProps>`
   position: absolute;
-  height: ${SIZE}px;
-  width: ${SIZE}px;
+  height: ${SIZE};
+  width: ${SIZE};
   background: ${({ color }) => color || "white"};
   border: 1px solid black;
 `

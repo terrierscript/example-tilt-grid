@@ -5,17 +5,18 @@ import styled from "@emotion/styled"
 export const Grid = styled.div`
   position: absolute;
   display: grid;
-  grid-template-rows: repeat(${NUM}, ${SIZE}px);
-  grid-template-columns: repeat(${NUM}, ${SIZE}px);
+  grid-template-rows: repeat(${NUM}, ${SIZE});
+  grid-template-columns: repeat(${NUM}, ${SIZE});
   /* background: rgba(0, 100, 100, 0.5); */
-  /* grid-gap: 10px; */
+  grid-gap: var(--gap, 10px);
+  transition: 0.5s;
 `
 
 export const ItemBg = styled.div`
   /* background: rgba(255, 0, 0, 0.6); */
   border: dotted 1px blue;
-  height: ${SIZE}px;
-  width: ${SIZE}px;
+  height: ${SIZE};
+  width: ${SIZE};
   :hover {
     background: blue;
   }

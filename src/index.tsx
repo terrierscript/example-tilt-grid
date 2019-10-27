@@ -9,6 +9,7 @@ import { Peace } from "./Peace"
 import { Map } from "./Map"
 import { Camera } from "./Camera"
 import { Theme } from "./Theme"
+import { Variables } from "./Variables"
 
 export const myCache = createCache({
   // key: "my-prefix-key",
@@ -19,12 +20,14 @@ const App = () => {
   return (
     <CacheProvider value={myCache}>
       <Theme>
-        <Camera>
-          <Map />
-          <Peace color="rgba(255,0,0,0.5)" />
-          <Peace color="rgba(0,255,0,0.5)" />
-          <Peace color="rgba(0,0,255,0.5)" />
-        </Camera>
+        <Variables>
+          <Camera>
+            <Map />
+            <Peace color="rgba(255,0,0,0.5)" />
+            {/* <Peace color="rgba(0,255,0,0.5)" />
+          <Peace color="rgba(0,0,255,0.5)" /> */}
+          </Camera>
+        </Variables>
       </Theme>
     </CacheProvider>
     // {/* </StyleSheetManager> */}
