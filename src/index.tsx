@@ -5,6 +5,7 @@ import styled from "@emotion/styled"
 import { default as sstyled } from "styled-components"
 import { CacheProvider, css } from "@emotion/core"
 import createCache from "@emotion/cache"
+import { ThemeProvider } from "emotion-theming"
 
 export const myCache = createCache({
   // key: "my-prefix-key",
@@ -20,7 +21,7 @@ type Position = {
 const Grid = styled.div`
   position: absolute;
   display: grid;
-  background: rgba(0, 100, 100, 0.5);
+  /* background: rgba(0, 100, 100, 0.5); */
   grid-template-rows: repeat(${NUM}, ${SIZE}px);
   grid-template-columns: repeat(${NUM}, ${SIZE}px);
   /* grid-gap: 10px; */
@@ -37,14 +38,8 @@ const PeaceGrid = styled.div`
   /* grid-gap: 20px; */
 `
 
-// const PeaceGrid = sstyled<Position>(Grid)`
-//   background: transparent;
-//   grid-template-rows: ${(props) => `repeat(2, ${SIZE * props.x}px)`};
-//   grid-template-columns: ${(props) => `repeat(2, ${SIZE * props.y}px)`};
-// `
-
 const ItemBg = styled.div`
-  background: rgba(255, 0, 0, 0.6);
+  /* background: rgba(255, 0, 0, 0.6); */
   border: dotted 1px blue;
   height: ${SIZE}px;
   width: ${SIZE}px;
@@ -55,11 +50,12 @@ const ItemBg = styled.div`
 
 const PEACE_COLOR = "rgba(0,255,0,0.6)"
 
-const Flat = styled.div`
+type Cube = { color: string }
+const Panel = styled.div<Cube>`
   position: absolute;
   height: ${SIZE}px;
   width: ${SIZE}px;
-  background: ${PEACE_COLOR};
+  background: ${({ color }) => color || PEACE_COLOR};
   border: 1px solid black;
 `
 
@@ -67,50 +63,48 @@ const Trans = styled.div`
   transition: 0.5s;
 `
 
+const MoverPos = styled.div<Position>`
+  grid-row: 1;
+  grid-column: 1;
+  transition: 0.5s;
+
+  background: ${(props) => (props.theme.showMover ? "rgba(0, 0, 0, 0.1)" : "")};
+  width: ${({ x }) => x * SIZE}px;
+  height: ${({ y }) => y * SIZE}px;
+`
+
 // .attrs(({ x, y }) => ({ x, y }))
 const PeacePos = styled(Trans)`
   grid-row: 2;
   grid-column: 2;
 `
-const MovePos = styled.div<Position>`
-  grid-row: 1;
-  grid-column: 1;
-  transition: 0.5s;
-
-  background: gray;
-  width: ${({ x }) => x * SIZE}px;
-  height: ${({ y }) => y * SIZE}px;
-`
-/*
-   grid-row: ${(props) => props.x};
-  grid-column: ${(props) => props.y}; */
-const Front = styled(Flat)`
+const Front = styled(Panel)`
   transform: rotateX(90deg) translateZ(${-SIZE / 2}px) translateY(${SIZE / 2}px);
 `
-const Back = styled(Flat)`
+const Back = styled(Panel)`
   transform: rotateX(90deg) translateZ(${SIZE / 2}px) translateY(${SIZE / 2}px);
 `
-const Left = styled(Flat)`
+const Left = styled(Panel)`
   transform: rotateY(90deg) translateZ(${SIZE / 2}px) translateX(-${SIZE / 2}px);
 `
-const Right = styled(Flat)`
+const Right = styled(Panel)`
   transform: rotateY(90deg) translateZ(-${SIZE / 2}px)
     translateX(-${SIZE / 2}px);
 `
-const Bottom = styled(Flat)``
-const Top = styled(Flat)`
+const Bottom = styled(Panel)``
+const Top = styled(Panel)`
   transform: translateZ(${SIZE}px);
 `
 
-const ItemPeace = (props) => {
+const ItemCube = (props: Cube) => {
   return (
-    <PeacePos {...props}>
-      <Bottom />
-      <Front />
-      <Back />
-      <Left />
-      <Right />
-      <Top />
+    <PeacePos>
+      <Bottom {...props} />
+      <Front {...props} />
+      <Back {...props} />
+      <Left {...props} />
+      <Right {...props} />
+      <Top {...props} />
     </PeacePos>
   )
 }
@@ -135,33 +129,32 @@ const Camera = ({ children }) => {
 const clamp = (x, lower, upper) => {
   return Math.min(Math.max(x, lower), upper)
 }
-const useKeys = () => {
-  const [x, setX] = useState(3)
-  const [y, setY] = useState(3)
+const rand = () => Math.floor(Math.random() * NUM)
+const useMover = () => {
+  const [pos, setPos] = useState({
+    x: rand(),
+    y: rand()
+  })
+  const { x, y } = pos
   const move = (dx, dy) => {
-    if (dx !== 0) {
-      setX((v) => clamp(v + dx, 0, NUM - 1))
-    }
-    if (dy !== 0) {
-      setY((v) => clamp(v + dy, 0, NUM - 1))
-    }
+    setPos(({ x, y }) => {
+      return {
+        x: clamp(dx, 0, NUM - 1),
+        y: clamp(dy, 0, NUM - 1)
+      }
+    })
   }
   useEffect(() => {
     setInterval(() => {
-      const d = Math.random() > 0.5 ? 1 : -1
-      Math.random() > 0.5 ? move(d, 0) : move(0, d)
+      move(rand(), rand())
     }, 1000)
   }, [])
-
   return [x, y]
 }
 
 const MapTile = () => {
   const ref = useRef()
-  useLayoutEffect(() => {
-    console.log(ref)
-  }, [])
-  return <ItemBg ref={ref} />
+  return <ItemBg />
 }
 
 const Map = () => {
@@ -175,18 +168,56 @@ const Map = () => {
     </Grid>
   )
 }
-const App = () => {
-  const [x, y] = useKeys()
+const Peace = (props: Cube) => {
+  const [x, y] = useMover()
   return (
-    // {/* <StyleSheetManager stylisOptions={{ prefix: false }}> */}
+    <PeaceGrid key="peace">
+      <MoverPos x={x} y={y} />
+      <ItemCube {...props} />
+    </PeaceGrid>
+  )
+}
+
+const Theme = ({ children }) => {
+  const [theme, setTheme] = useState({
+    showMover: true
+  })
+  const changeMover = (e) => {
+    const v = e.target.checked
+    setTheme((theme) => ({
+      ...theme,
+      showMover: v
+    }))
+  }
+  console.log(theme)
+  return (
+    <ThemeProvider theme={theme}>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={theme.showMover}
+            onChange={changeMover}
+          ></input>
+          Show mover
+        </label>
+      </div>
+      {children}
+    </ThemeProvider>
+  )
+}
+
+const App = () => {
+  return (
     <CacheProvider value={myCache}>
-      <Camera>
-        <Map />
-        <PeaceGrid key="peace">
-          <MovePos x={x} y={y} />
-          <ItemPeace x={x} y={y} />
-        </PeaceGrid>
-      </Camera>
+      <Theme>
+        <Camera>
+          <Map />
+          <Peace color="rgba(255,0,0,0.5)" />
+          <Peace color="rgba(0,255,0,0.5)" />
+          <Peace color="rgba(0,0,255,0.5)" />
+        </Camera>
+      </Theme>
     </CacheProvider>
     // {/* </StyleSheetManager> */}
   )

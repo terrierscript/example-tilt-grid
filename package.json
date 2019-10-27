@@ -20,6 +20,7 @@
     "@types/react-dom": "^16.9.1",
     "babel-plugin-emotion": "^10.0.22",
     "core-js": "^3.2.1",
+    "emotion-theming": "^10.0.19",
     "eslint-plugin-react-hooks": "^2.1.2",
     "jest": "^24.9.0",
     "parcel": "^1.12.3",
