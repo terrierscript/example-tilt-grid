@@ -7,8 +7,16 @@
         "corejs": 3
       }
     ],
-    "@emotion/babel-preset-css-prop",
     "@babel/react",
     "@babel/typescript"
+  ],
+  "plugins": [
+    [
+      "emotion",
+      {
+        "labelFormat": "xx-[local]",
+        "autoLabel": true
+      }
+    ]
   ]
 }
